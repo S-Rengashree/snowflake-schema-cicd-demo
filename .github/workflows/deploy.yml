@@ -1,0 +1,17 @@
+name: Snowflake CI/CD Demo
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy Snowflake Objects
+        run: |
+          echo "In real environments, Snowflake CLI runs here using service user or key-pair authentication"
