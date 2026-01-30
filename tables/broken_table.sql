@@ -1,3 +1,3 @@
-create or replace table broken_table (
+create or replace broken_table (
     id int
 )
