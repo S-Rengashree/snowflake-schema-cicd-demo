@@ -3,4 +3,5 @@ CREATE OR REPLACE TABLE demo_table (
     name STRING,
     created_at TIMESTAMP,
     status STRING
+    status STRING
 );
