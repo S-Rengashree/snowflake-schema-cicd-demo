@@ -1,4 +1,4 @@
-name: Snowflake CI/CD Demo
+name: Deploy Snowflake Objects
 
 on:
   push:
@@ -8,10 +8,32 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
 
-      - name: Deploy Snowflake Objects
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Snowflake CLI
         run: |
-          echo "In real environments, Snowflake CLI runs here using service user or key-pair authentication"
+          pip install snowflake-cli-labs
+
+      - name: Configure Snowflake Connection
+        run: |
+          mkdir -p ~/.snowflake
+          cat <<EOF > ~/.snowflake/config.toml
+          [connections.demo_conn]
+          account = "${{ secrets.SNOWFLAKE_ACCOUNT }}"
+          user = "${{ secrets.SNOWFLAKE_USER }}"
+          role = "${{ secrets.SNOWFLAKE_ROLE }}"
+          database = "${{ secrets.SNOWFLAKE_DATABASE }}"
+          schema = "${{ secrets.SNOWFLAKE_SCHEMA }}"
+          private_key = """${{ secrets.SNOWFLAKE_PRIVATE_KEY }}"""
+          private_key_passphrase = "${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}"
+          EOF
+
+      - name: Deploy all tables
+        run: |
+          for file in tables/*.sql; do
+            echo "Deploying $file"
+            snow sql --connection demo_conn --filename "$file"
+          done
