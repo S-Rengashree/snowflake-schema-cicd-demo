@@ -30,6 +30,7 @@ jobs:
           private_key = """${{ secrets.SNOWFLAKE_PRIVATE_KEY }}"""
           private_key_passphrase = "${{ secrets.SNOWFLAKE_PRIVATE_KEY_PASSPHRASE }}"
           EOF
+          chmod 600 ~/.snowflake/config.toml
 
       - name: Deploy all tables
         run: |
